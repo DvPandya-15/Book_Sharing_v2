@@ -1,6 +1,7 @@
 import 'package:book_sharing_app/pages/auth/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:book_sharing_app/models/post_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -291,41 +292,7 @@ bool isEmail(String value) {
       .hasMatch(value);
 }
 
-class User {
-  String name;
-  String email;
-  String phone;
-  String city;
-  String department;
 
-  User({this.name, this.email, this.phone, this.city, this.department});
-
-  User.fromJson(Map<String, dynamic> json) {
-    name = json['Name'];
-    email = json['Email'];
-    phone = json['Phone'];
-    city = json['city'];
-    department = json['department'];
-  }
-
-  User.fromSnapshot(DocumentSnapshot json) {
-    name = json['Name'];
-    email = json['Email'];
-    phone = json['Phone'];
-    city = json['city'];
-    department = json['department'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Name'] = this.name;
-    data['Email'] = this.email;
-    data['Phone'] = this.phone;
-    data['city'] = this.city;
-    data['department'] = this.department;
-    return data;
-  }
-}
 
 class FirebaseAuthErrorCode {
   static const INVALID_EMAIL = "ERROR_INVALID_EMAIL";

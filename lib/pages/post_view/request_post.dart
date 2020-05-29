@@ -10,7 +10,7 @@ class RequestPostView extends StatefulWidget {
 }
 
 class _RequestPostViewState extends State<RequestPostView> {
-  List<PostModel> postList = [];
+  List<BookPost> postList = [];
 
   @override
   void initState() {
@@ -60,7 +60,7 @@ class _RequestPostViewState extends State<RequestPostView> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BookPage(doc)),
+                  MaterialPageRoute(builder: (context) => BookPage(PostModel(bookId: doc["book"], userId: doc["user"]), BookPostType.Requesting)),
                 );
               },
               child: Container(
@@ -92,40 +92,40 @@ class _RequestPostViewState extends State<RequestPostView> {
                           ),
 
                           Text(book.author, style: TextStyle(fontSize: 14)),
-                          book.genres != null
-                              ? Container(
-                                  width: 200,
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    spacing: 8.0,
-                                    children: book.genres
-                                        .map(
-                                          (e) => Chip(
-                                            label: Text(
-                                              e,
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                )
-                              : Container(),
-                          Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.date_range,
-                                size: 12,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "10th March, 2020",
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
+//                          book.genres != null
+//                              ? Container(
+//                                  width: 200,
+//                                  child: Wrap(
+//                                    direction: Axis.horizontal,
+//                                    spacing: 8.0,
+//                                    children: book.genres
+//                                        .map(
+//                                          (e) => Chip(
+//                                            label: Text(
+//                                              e,
+//                                              style: TextStyle(fontSize: 12),
+//                                            ),
+//                                          ),
+//                                        )
+//                                        .toList(),
+//                                  ),
+//                                )
+//                              : Container(),
+//                          Row(
+//                            children: <Widget>[
+//                              Icon(
+//                                Icons.date_range,
+//                                size: 12,
+//                              ),
+//                              SizedBox(
+//                                width: 5,
+//                              ),
+//                              Text(
+//                                "10th March, 2020",
+//                                style: TextStyle(fontSize: 12),
+//                              ),
+//                            ],
+//                          ),
 //                Padding(
 //                  padding: EdgeInsets.all(7),
 //                  child: Text(post.date),

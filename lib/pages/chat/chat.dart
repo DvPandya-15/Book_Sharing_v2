@@ -6,6 +6,7 @@ class Chat extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
+        leading: Icon(Icons.chat),
         title: Text(
           "Chat",
           style: TextStyle(color: Colors.white, fontSize: 20),

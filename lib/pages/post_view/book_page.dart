@@ -1,7 +1,6 @@
 import 'package:book_sharing_app/models/post_model.dart';
-import 'package:book_sharing_app/pages/auth/register.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 //class Snapshot {
@@ -12,9 +11,9 @@ import 'package:flutter/material.dart';
 //}
 
 class BookPage extends StatelessWidget {
-  DocumentSnapshot doc;
-
-  BookPage(this.doc);
+  final PostModel post;
+  final BookPostType bookPostType;
+  BookPage(this.post, this.bookPostType);
 
 //
 //  // In the constructor, require a Todo.
@@ -33,10 +32,10 @@ class BookPage extends StatelessWidget {
       body: StreamBuilder(
           stream: Firestore.instance
               .collection("books")
-              .document(doc["book"])
+              .document(post.bookId)
               .snapshots(),
           builder: (context, snapshot) {
-            if(!snapshot.hasData) return Container();
+            if (!snapshot.hasData) return Container();
             final book = Book.fromSnapshot(snapshot.data);
             return Column(
               children: <Widget>[
@@ -50,10 +49,11 @@ class BookPage extends StatelessWidget {
                             margin: EdgeInsets.only(right: 20),
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image:
-                              book.imageUrl == null || book.imageUrl.isEmpty ? AssetImage(
-                                  "assets/book_placeholder.png") : NetworkImage(
-                                  book.imageUrl)),
+                                  image: book.imageUrl == null ||
+                                          book.imageUrl.isEmpty
+                                      ? AssetImage(
+                                          "assets/book_placeholder.png")
+                                      : NetworkImage(book.imageUrl)),
                             ),
                             width: 100,
                             height: 150,
@@ -71,21 +71,25 @@ class BookPage extends StatelessWidget {
                                 ),
                                 Text(book.author,
                                     style: TextStyle(fontSize: 14)),
-                                Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.date_range,
-                                      size: 12,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      "10th March, 2020",
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ],
-                                ),
+                                book.genres != null
+                                    ? Container(
+                                  width: 200,
+                                  child: Wrap(
+                                    direction: Axis.horizontal,
+                                    spacing: 8.0,
+                                    children: book.genres
+                                        .map(
+                                          (e) => Chip(
+                                        label: Text(
+                                          e,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                    )
+                                        .toList(),
+                                  ),
+                                )
+                                    : Container(),
                               ],
                             ),
                           ),
@@ -94,33 +98,64 @@ class BookPage extends StatelessWidget {
                       SizedBox(
                         height: 20,
                       ),
-                      Divider(height: 1,color: Colors.black,),
+                      Divider(
+                        height: 1,
+                        color: Colors.black,
+                      ),
                       Text(
-                        "--Users Who Are Donating--",
+                        "--Users Who Are ${bookPostType == BookPostType.Requesting ? "Requesting" : "Donating"} --",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      Divider(height: 1,color: Colors.black,),
+                      Divider(
+                        height: 1,
+                        color: Colors.black,
+                      ),
                       StreamBuilder(
                         stream: Firestore.instance
                             .collection("users")
-                            .document(doc["user"])
+                            .document(post.userId)
                             .snapshots(),
                         builder: (context, snapshot) {
                           final bUser = User.fromSnapshot(snapshot.data);
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Card(
-                              child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Text(
-                                bUser.name,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )),
+                          return ExpansionTile(
+                            title: Text(
+                              bUser.name,
+                              style: TextStyle(fontSize: 18),
                             ),
+                            trailing: Icon(Icons.person),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Email Id:  ${bUser.email}",
+                                      style: TextStyle(fontSize: 16),
+                                      textAlign: TextAlign.left,
+                                    )),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Phone Number:  ${bUser.phone}",
+                                      style: TextStyle(fontSize: 16),
+                                      textAlign: TextAlign.left,
+                                    )),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "City:  ${bUser.city}",
+                                      style: TextStyle(fontSize: 16),
+                                      textAlign: TextAlign.left,
+                                    )),
+                              ),
+                            ],
                           );
                         },
                       ),
